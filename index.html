@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rezervacijos</title>
+</head>
+
+<body>
+
+<h2>Rezervacijos</h2>
+
+<input id="auto" placeholder="Auto">
+<input id="nuo" type="date">
+<input id="iki" type="date">
+<input id="klientas" placeholder="Klientas">
+
+<button onclick="add()">Pridėti</button>
+
+<ul id="list"></ul>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "PAKEISK",
+  authDomain: "PAKEISK",
+  projectId: "PAKEISK"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const list = document.getElementById("list");
+
+window.add = async () => {
+  await addDoc(collection(db, "rez"), {
+    auto: auto.value,
+    nuo: nuo.value,
+    iki: iki.value,
+    klientas: klientas.value
+  });
+};
+
+onSnapshot(collection(db, "rez"), snap => {
+  list.innerHTML = "";
+  snap.forEach(d => {
+    const r = d.data();
+    list.innerHTML += `<li>${r.auto} - ${r.klientas}</li>`;
+  });
+});
+</script>
+
+</body>
+</html>
